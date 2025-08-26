@@ -4,66 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Relatório PET Saúde – URCA</title>
-  <style>
-    :root{
-      --bg:#f7f7fb; --card:#fff; --ink:#222; --muted:#666; --line:#e6e6ee;
-      --brand:#0f766e; --good:#16a34a; --bad:#dc2626;
-    }
-    *{box-sizing:border-box}
-    body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Helvetica,Arial,sans-serif; color:var(--ink); background:var(--bg)}
-    .wrap{max-width:1100px; margin:0 auto}
-    .card{background:var(--card); border:1px solid var(--line); border-radius:14px; box-shadow:0 4px 14px rgba(0,0,0,.04)}
-    .titleBlock{padding:6px 16px 12px; text-align:center; border:1px solid var(--line); border-radius:14px; background:#fff; margin-top:8px}
-    .titleBlock .titleLine{font-weight:700; font-size:14px}
-    .mini{font-size:12px; color:var(--muted)}
-    h1{font-size:20px; margin:0 0 6px}
-    label{display:block; font-size:12px; color:var(--muted); margin-bottom:6px}
-    input, select, textarea{
-      width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px; background:#fff; color:var(--ink);
-      font:inherit; outline:none;
-    }
-    input:focus, textarea:focus{border-color:var(--brand); box-shadow:0 0 0 3px rgba(15,118,110,.12)}
-    .grid{display:grid; gap:12px}
-    .grid.cols-3{grid-template-columns:repeat(3,1fr)}
-    .grid.cols-2{grid-template-columns:repeat(2,1fr)}
-    .row{display:flex; gap:12px; align-items:center; flex-wrap:wrap}
-    .chk{display:flex; gap:8px; align-items:center; margin-right:12px}
-    .kpi{display:flex; gap:18px; padding:10px 16px; align-items:center}
-    .pill{padding:6px 10px; border-radius:999px; background:#ecfeff; font-weight:600}
-    .toolbar{display:flex; flex-wrap:wrap; gap:8px; padding:12px; border-top:1px solid var(--line); background:#fafafb; border-radius:0 0 14px 14px}
-    .btn{padding:10px 12px; border-radius:10px; border:1px solid var(--line); background:#fff; cursor:pointer; font:inherit}
-    .btn.primary{background:var(--brand); color:#fff; border-color:var(--brand)}
-    .btn.success{background:var(--good); color:#fff; border-color:var(--good)}
-    .btn.danger{background:var(--bad); color:#fff; border-color:var(--bad)}
-
-    /* Tabela */
-    .tableWrap{overflow:auto; border-top:1px solid var(--line)}
-    table{width:100%; border-collapse:collapse; min-width:960px}
-    thead th{position:sticky; top:0; background:#fcfcff; z-index:1; border-bottom:1px solid var(--line); text-align:left; font-size:12px; color:var(--muted); padding:10px}
-    tbody td{border-bottom:1px solid var(--line); padding:8px}
-    tfoot td{border-top:2px solid var(--line); padding:10px; font-weight:600}
-    td input, td textarea{width:100%}
-    td.num{text-align:right}
-    tr.invalid td{background:#fff5f5}
-
-    /* Cabeçalho com imagem fixa */
-    .headerCard{background:#fff; border:1px solid var(--line); border-radius:14px; margin:12px auto 8px}
-    .headerImg{display:block; width:100%; height:auto; object-fit:contain; max-height:110px; padding:8px 10px}
-
-    /* Assinatura */
-    .sig-area{padding:24px 16px; display:flex; justify-content:flex-end}
-    .sig-box{width:360px; text-align:center; border-top:1px solid #000; padding-top:8px; font-size:12px}
-
-    /* Impressão */
-    @page{ size:A4; margin:14mm 12mm 16mm 12mm; }
-    @media print{
-      body{background:#fff}
-      .toolbar{display:none !important}
-      .card{border:none; box-shadow:none}
-      .wrap{max-width:none}
-      a[href]:after{content:""}
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="wrap">
@@ -72,121 +13,102 @@
       <img class="headerImg" src="./cabecalho-pet-saude.png" alt="Cabeçalho PET Saúde">
     </div>
 
-    <!-- Títulos como no exemplo -->
+    <!-- Títulos -->
     <div class="titleBlock">
       <div class="titleLine">PROGRAMA PET SAÚDE INFORMAÇÃO E SAÚDE DIGITAL</div>
       <div class="titleLine">URCA/ SMS CRATO/ SMS JUAZEIRO DO NORTE/ ADS CRATO/ SMS IGUATU</div>
     </div>
 
     <main class="card" style="margin-top:12px">
-      <!-- Cabeçalho de dados -->
-      <section style="padding:16px 16px 0">
+      <!-- Cabeçalho obrigatório -->
+      <section class="content-narrow" style="padding:16px 0 0">
         <div class="grid cols-2">
           <div>
-            <label>Bolsista/ Voluntário</label>
-            <input id="colaborador" value="Marco André Santos Machado" />
+            <label>Bolsista/ Voluntário *</label>
+            <input id="colaborador" required />
           </div>
           <div>
-            <label>Vínculo</label>
-            <input id="vinculo" value="Tutor" />
+            <label>Vínculo *</label>
+            <input id="vinculo" required />
           </div>
         </div>
 
-        <div class="grid cols-3" style="margin-top:12px">
+        <div class="grid cols-2" style="margin-top:12px">
           <div>
-            <label>Grupo Tutorial (GT)</label>
-            <input id="gt" value="4" />
+            <label>Cenário *</label>
+            <input id="cenario" required />
           </div>
           <div>
-            <label>Cenário</label>
-            <input id="cenario" value="Plataformas digitais" />
-          </div>
-          <div>
-            <label>Período (mês/ano)</label>
-            <input id="periodo" type="month" />
+            <label>Período (mês/ano) *</label>
+            <input id="periodo" type="month" required />
           </div>
         </div>
 
-        <div class="row" style="margin-top:10px">
-          <span class="mini" style="min-width:140px">Atividade do GT:</span>
-          <label class="chk"><input type="checkbox" id="gtTrabalho" checked> Trabalho</label>
-          <label class="chk"><input type="checkbox" id="gtFormacao"> Formação</label>
-          <label class="chk"><input type="checkbox" id="gtPesquisa"> Pesquisa</label>
+        <div class="row" style="margin-top:12px">
+          <span class="mini" style="min-width:140px">Eixo Temático *</span>
+          <label class="chk"><input type="radio" name="eixo" id="eixoI"> I</label>
+          <label class="chk"><input type="radio" name="eixo" id="eixoII"> II</label>
+          <label class="chk"><input type="radio" name="eixo" id="eixoIII"> III</label>
+          <label class="chk"><input type="radio" name="eixo" id="eixoIV"> IV</label>
         </div>
 
-        <div class="row" style="margin-top:6px">
-          <span class="mini" style="min-width:140px">Eixo Temático:</span>
-          <label class="chk"><input type="checkbox" id="eixoI"> I</label>
-          <label class="chk"><input type="checkbox" id="eixoII" checked> II</label>
-          <label class="chk"><input type="checkbox" id="eixoIII"> III</label>
-          <label class="chk"><input type="checkbox" id="eixoIV"> IV</label>
-        </div>
-
-        <div class="kpi">
-          <span class="pill">Total: <span id="totalHoras">00:00</span></span>
-          <span class="mini">Salva automaticamente (localStorage).</span>
-          <span class="mini" id="autosaveHint" style="margin-left:auto">Auto-save: ativo</span>
+        <div class="row" style="margin-top:8px">
+          <span class="mini" style="min-width:140px">Atividade do GT *</span>
+          <label class="chk"><input type="radio" name="atividadeGT" id="gt1"> GT 1: Trabalho</label>
+          <label class="chk"><input type="radio" name="atividadeGT" id="gt2"> GT 2: Formação</label>
+          <label class="chk"><input type="radio" name="atividadeGT" id="gt3"> GT 3: Pesquisa</label>
         </div>
       </section>
 
-      <!-- Tabela -->
-      <div class="tableWrap">
-        <table id="tabela">
-          <thead>
-            <tr>
-              <th style="width:130px">Data (dd/MM/yyyy)</th>
-              <th>Atividade / Observações</th>
-              <th style="width:120px">Entrada</th>
-              <th style="width:120px">Saída</th>
-              <th style="width:120px">Intervalo (min)</th>
-              <th style="width:120px">Carga (hh:mm)</th>
-              <th style="width:50px">Sel.</th>
-            </tr>
-          </thead>
-          <tbody id="tbody"></tbody>
-          <tfoot>
-            <tr>
-              <td colspan="5" class="num">Total do período</td>
-              <td class="num" id="tfootTotal">00:00</td>
-              <td></td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
+      <!-- Tabela centralizada e mais estreita -->
+      <div class="content-narrow">
+        <div class="tableWrap">
+          <table id="tabela">
+            <thead>
+              <tr>
+                <th class="col-sel">Sel.</th>
+                <th class="col-date">Data</th>
+                <th>Atividade / Observações</th>
+                <th class="col-time">Entrada</th>
+                <th class="col-time">Saída</th>
+                <th class="col-carga">Carga Horária</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+            <tfoot>
+              <tr>
+                <td class="col-sel"></td>
+                <td class="col-date"></td>
+                <td class="num" colspan="3">Total do período</td>
+                <td class="num col-carga" id="tfootTotal">00:00</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
 
-      <!-- Ações -->
-      <div class="toolbar">
-        <button class="btn primary" id="addLinha">+ Adicionar linha</button>
-        <button class="btn" id="dupLinha">Duplicar última</button>
-        <button class="btn danger" id="remSel">Remover selecionadas</button>
-        <button class="btn" id="limparTudo">Limpar tudo</button>
-        <span style="margin-left:auto"></span>
-        <button class="btn" id="exportJson">Exportar JSON</button>
-        <button class="btn" id="importJson">Importar JSON</button>
-        <button class="btn success" onclick="window.print()">Imprimir / Salvar PDF</button>
+        <!-- Ações (fora da impressão) -->
+        <div class="toolbar">
+          <button class="btn primary" id="addLinha">+ Adicionar linha</button>
+          <button class="btn" id="dupLinha">Duplicar última</button>
+          <button class="btn danger" id="remSel">Remover selecionadas</button>
+          <button class="btn" id="limparTudo">Limpar tudo</button>
+          <span style="margin-left:auto"></span>
+          <button class="btn" id="exportJson">Exportar JSON</button>
+          <button class="btn" id="importJson">Importar JSON</button>
+          <button class="btn success" onclick="window.print()">Imprimir / Salvar PDF</button>
+        </div>
+
+        <!-- Assinaturas lado a lado, alinhadas com a tabela -->
+        <div class="sig-area">
+          <div class="sig-box">Assinatura do Bolsista</div>
+          <div class="sig-box">Assinatura do Tutor/ Coordenador do Grupo Tutorial</div>
+        </div>
       </div>
     </main>
-
-    <!-- Assinatura -->
-    <div class="card sig-area" style="margin-top:10px">
-      <div class="sig-box">Assinatura do Tutor/ Coordenador do Grupo Tutorial</div>
-    </div>
   </div>
 
   <script>
-    // ====== Date helpers (dd/MM/yyyy) ======
-    function maskDateBR(input){
-      let v = input.value.replace(/\D/g,'').slice(0,8);
-      if(v.length>=5) input.value = v.replace(/(\d{2})(\d{2})(\d{0,4})/,'$1/$2/$3');
-      else if(v.length>=3) input.value = v.replace(/(\d{2})(\d{0,2})/,'$1/$2');
-      else input.value = v;
-    }
-    function isValidDateBR(s){
-      if(!/^\d{2}\/\d{2}\/\d{4}$/.test(s)) return false;
-      const [d,m,y] = s.split('/').map(Number);
-      const dt = new Date(y, m-1, d);
-      return dt.getFullYear()===y && (dt.getMonth()+1)===m && dt.getDate()===d;
-    }
+    // ===== Helpers =====
     function toMinutes(hhmm){
       if(!hhmm || !/^\d{2}:\d{2}$/.test(hhmm)) return null;
       const [h,m]=hhmm.split(':').map(Number);
@@ -200,38 +122,38 @@
       const m = s % 60;
       return (h+"").padStart(2,"0")+":"+(""+m).padStart(2,"0");
     }
-    function computeCarga(entrada, saida, intervaloMin){
+    function computeCarga(entrada, saida){
       const ei = toMinutes(entrada);
       const so = toMinutes(saida);
-      const brk = Number.isFinite(intervaloMin) ? Math.max(0, intervaloMin) : 0;
       if(ei==null || so==null) return {min:null, ok:false};
-      const dur = so - ei - brk;
-      return {min: dur, ok: dur>=0};
+      const dur = so - ei;
+      return {min: dur, ok: dur>0}; // exige entrada < saída
     }
 
+    // ===== Estado / DOM =====
     const tbody = document.getElementById('tbody');
-    const totalHoras = document.getElementById('totalHoras');
     const tfootTotal = document.getElementById('tfootTotal');
-    const HDR_KEYS = ['colaborador','vinculo','gt','cenario','periodo','gtTrabalho','gtFormacao','gtPesquisa','eixoI','eixoII','eixoIII','eixoIV'];
-
+    const HDR_KEYS = ['colaborador','vinculo','cenario','periodo'];
+    const RADIO_GROUPS = { eixo:['eixoI','eixoII','eixoIII','eixoIV'], atividadeGT:['gt1','gt2','gt3'] };
     let linhas = [];
 
     function linhaDOM(l){
       const tr = document.createElement('tr');
 
+      // Sel.
+      const tdSel = document.createElement('td'); tdSel.style.textAlign='center';
+      const chk = document.createElement('input'); chk.type='checkbox';
+      tdSel.appendChild(chk);
+
+      // Data (date picker)
       const tdData = document.createElement('td');
       const inpData = document.createElement('input');
-      inpData.placeholder = 'dd/MM/yyyy';
-      inpData.inputMode = 'numeric';
+      inpData.type = 'date';
       inpData.value = l.data || '';
-      inpData.addEventListener('input', ()=>{
-        maskDateBR(inpData);
-        l.data = inpData.value;
-        if(inpData.value && !isValidDateBR(inpData.value)) tr.classList.add('invalid'); else tr.classList.remove('invalid');
-        save();
-      });
+      inpData.addEventListener('change', ()=>{l.data=inpData.value; save();});
       tdData.appendChild(inpData);
 
+      // Descrição
       const tdDesc = document.createElement('td');
       const txt = document.createElement('textarea');
       txt.rows = 2; txt.placeholder = "Descreva a atividade, local, OS, etc.";
@@ -239,48 +161,37 @@
       txt.addEventListener('input', ()=>{l.desc=txt.value; save();});
       tdDesc.appendChild(txt);
 
+      // Entrada
       const tdEnt = document.createElement('td');
       const ent = document.createElement('input');
       ent.type='time'; ent.step=60; ent.value = l.entrada || '';
       ent.addEventListener('input', ()=>{l.entrada=ent.value; recalcLinha(l,tr); save();});
       tdEnt.appendChild(ent);
 
+      // Saída
       const tdSai = document.createElement('td');
       const sai = document.createElement('input');
       sai.type='time'; sai.step=60; sai.value = l.saida || '';
       sai.addEventListener('input', ()=>{l.saida=sai.value; recalcLinha(l,tr); save();});
       tdSai.appendChild(sai);
 
-      const tdBrk = document.createElement('td');
-      const brk = document.createElement('input');
-      brk.type='number'; brk.min=0; brk.step=5; brk.placeholder='0';
-      brk.value = Number.isFinite(l.intervalo)? l.intervalo : '';
-      brk.addEventListener('input', ()=>{
-        const v = brk.value===''? NaN : Number(brk.value);
-        l.intervalo = Number.isFinite(v)? v : undefined;
-        recalcLinha(l,tr); save();
-      });
-      tdBrk.appendChild(brk);
-
+      // Carga Horária
       const tdCarga = document.createElement('td'); tdCarga.className='num';
       tdCarga.textContent = l.carga || '00:00';
 
-      const tdSel = document.createElement('td'); tdSel.style.textAlign='center';
-      const chk = document.createElement('input'); chk.type='checkbox';
-      tdSel.appendChild(chk);
-
-      tr.append(tdData, tdDesc, tdEnt, tdSai, tdBrk, tdCarga, tdSel);
+      tr.append(tdSel, tdData, tdDesc, tdEnt, tdSai, tdCarga);
       recalcLinha(l,tr);
       return tr;
     }
 
     function recalcLinha(l,tr){
-      const cargaCell = tr.children[5];
-      const {min, ok} = computeCarga(l.entrada, l.saida, Number.isFinite(l.intervalo)? l.intervalo : 0);
-      if(min==null){ cargaCell.textContent='00:00'; l.carga='00:00'; recalcTotal(); return; }
-      if(!ok){ tr.classList.add('invalid'); } else { tr.classList.remove('invalid'); }
+      const cargaCell = tr.children[5]; // "Carga Horária"
+      const {min, ok} = computeCarga(l.entrada, l.saida);
+      if(min==null){ cargaCell.textContent='00:00'; l.carga='00:00'; tr.classList.remove('invalid'); recalcTotal(); return; }
+      if(!ok){ tr.classList.add('invalid'); l.carga='00:00'; cargaCell.textContent='00:00'; recalcTotal(); return; }
       const hhmm = fromMinutes(min);
       l.carga = hhmm;
+      tr.classList.remove('invalid');
       cargaCell.textContent = hhmm;
       recalcTotal();
     }
@@ -290,9 +201,7 @@
         const parts = /^\d{2}:\d{2}$/.test(l.carga||'') ? l.carga.split(':').map(Number) : [0,0];
         return a + parts[0]*60 + parts[1];
       },0);
-      const hhmm = fromMinutes(totalMin);
-      totalHoras.textContent = hhmm;
-      tfootTotal.textContent = hhmm;
+      tfootTotal.textContent = fromMinutes(totalMin);
     }
 
     function render(){
@@ -301,43 +210,57 @@
       recalcTotal();
     }
 
-    function save(){
+    // ===== Persistência =====
+    function getHeader(){
       const header = Object.fromEntries(HDR_KEYS.map(id=>{
         const el = document.getElementById(id);
-        return [id, (el?.type==='checkbox') ? el.checked : el?.value];
+        return [id, el?.value || ""];
       }));
-      const data = {header, linhas};
-      localStorage.setItem('petSaudeRelatorio:v1', JSON.stringify(data));
-      const hint = document.getElementById('autosaveHint');
-      if(hint) hint.textContent = 'Auto-save: salvo às ' + new Date().toLocaleTimeString('pt-BR');
+      for(const [group, ids] of Object.entries(RADIO_GROUPS)){
+        const checkedId = ids.find(id => document.getElementById(id)?.checked);
+        header[group] = checkedId || null;
+      }
+      return header;
     }
-
+    function setHeader(header){
+      if(!header) return;
+      HDR_KEYS.forEach(id=>{
+        const el = document.getElementById(id);
+        if(el && header[id]!=null) el.value = header[id];
+      });
+      for(const [group, ids] of Object.entries(RADIO_GROUPS)){
+        ids.forEach(id=>{
+          const el = document.getElementById(id);
+          if(el) el.checked = (header[group]===id);
+        });
+      }
+    }
+    function save(){
+      const data = {header:getHeader(), linhas};
+      localStorage.setItem('petSaudeRelatorio:v4', JSON.stringify(data));
+    }
     function load(){
-      const raw = localStorage.getItem('petSaudeRelatorio:v1');
+      const raw = localStorage.getItem('petSaudeRelatorio:v4')
+        || localStorage.getItem('petSaudeRelatorio:v3')
+        || localStorage.getItem('petSaudeRelatorio:v2')
+        || localStorage.getItem('petSaudeRelatorio:v1');
       if(!raw){ linhas = []; return; }
       try{
         const parsed = JSON.parse(raw);
-        if(parsed.header){
-          HDR_KEYS.forEach(id=>{
-            const el = document.getElementById(id);
-            if(!el) return;
-            if(el.type==='checkbox') el.checked = !!parsed.header[id];
-            else if(parsed.header[id]!=null) el.value = parsed.header[id];
-          });
-        }
+        setHeader(parsed.header);
         linhas = (parsed.linhas || []).map(l=>({
           data:l.data||'',
           desc:l.desc||'',
           entrada:l.entrada||'',
           saida:l.saida||'',
-          intervalo:Number.isFinite(l.intervalo)? l.intervalo : undefined,
           carga:l.carga||'00:00'
         }));
       }catch(e){ linhas=[]; }
     }
 
+    // ===== Ações =====
     document.getElementById('addLinha').addEventListener('click', ()=>{
-      linhas.push({data:'', desc:'', entrada:'', saida:'', intervalo:0, carga:'00:00'});
+      linhas.push({data:'', desc:'', entrada:'', saida:'', carga:'00:00'});
       render(); save();
     });
     document.getElementById('dupLinha').addEventListener('click', ()=>{
@@ -356,31 +279,31 @@
     });
     document.getElementById('limparTudo').addEventListener('click', ()=>{
       if(!confirm('Limpar todos os dados?')) return;
-      HDR_KEYS.forEach(id=>{
-        const el = document.getElementById(id);
-        if(el?.type==='checkbox') el.checked = false; else if(el) el.value='';
-      });
+      ['colaborador','vinculo','cenario','periodo'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+      Object.values(RADIO_GROUPS).flat().forEach(id=>{ const el=document.getElementById(id); if(el) el.checked=false; });
       linhas = [];
       render(); save();
     });
-    HDR_KEYS.forEach(id=>{
+
+    // salvar cabeçalho ao alterar
+    ['colaborador','vinculo','cenario','periodo'].forEach(id=>{
       const el = document.getElementById(id);
       el?.addEventListener('input', save);
       el?.addEventListener('change', save);
     });
+    Object.values(RADIO_GROUPS).flat().forEach(id=>{
+      const el = document.getElementById(id);
+      el?.addEventListener('change', save);
+    });
 
+    // Exportar / Importar
     document.getElementById('exportJson').addEventListener('click', ()=>{
-      const header = Object.fromEntries(HDR_KEYS.map(id=>{
-        const el = document.getElementById(id);
-        return [id, (el?.type==='checkbox') ? el.checked : el?.value];
-      }));
-      const payload = {exportedAt:new Date().toISOString(), header, linhas};
+      const payload = {exportedAt:new Date().toISOString(), header:getHeader(), linhas};
       const blob = new Blob([JSON.stringify(payload,null,2)], {type:'application/json'});
       const url = URL.createObjectURL(blob);
       const a = Object.assign(document.createElement('a'), {href:url, download:'pet_saude_relatorio.json'});
       document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
     });
-
     document.getElementById('importJson').addEventListener('click', ()=>{
       const inp = document.createElement('input'); inp.type='file'; inp.accept='.json,application/json';
       inp.onchange = () => {
@@ -389,14 +312,7 @@
         reader.onload = () => {
           try{
             const data = JSON.parse(reader.result);
-            if(data.header){
-              HDR_KEYS.forEach(id=>{
-                const el = document.getElementById(id);
-                if(!el) return;
-                if(el.type==='checkbox') el.checked = !!data.header[id];
-                else if(data.header[id]!=null) el.value = data.header[id];
-              });
-            }
+            setHeader(data.header || null);
             linhas = (data.linhas || []);
             render(); save();
           }catch(e){ alert('Arquivo inválido.'); }
@@ -406,10 +322,28 @@
       inp.click();
     });
 
+    // Validação do cabeçalho antes de imprimir
+    function validarCabecalho(){
+      const req = ['colaborador','vinculo','cenario','periodo'];
+      let ok = true;
+      for(const id of req){
+        const el = document.getElementById(id);
+        if(!el.value){ ok=false; el.style.borderColor='red'; } else el.style.borderColor='';
+      }
+      if(!document.querySelector('input[name="eixo"]:checked')) ok=false;
+      if(!document.querySelector('input[name="atividadeGT"]:checked')) ok=false;
+      if(!ok) alert("Preencha todos os campos obrigatórios do cabeçalho!");
+      return ok;
+    }
+    const oldPrint = window.print;
+    window.print = function(){
+      if(validarCabecalho()) oldPrint();
+    };
+
     // Inicialização
     load(); render();
     if(linhas.length===0){
-      linhas = [{},{},{}].map(()=>({data:'', desc:'', entrada:'', saida:'', intervalo:0, carga:'00:00'}));
+      linhas = [{},{},{}].map(()=>({data:'', desc:'', entrada:'', saida:'', carga:'00:00'}));
       render(); save();
     }
   </script>
