@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gerador de Relatório de Atividades</title>
+  <style>
+    :root{
+      --bg:#f7f7fb; --card:#fff; --ink:#222; --muted:#666; --line:#e6e6ee; --brand:#3b82f6; --good:#16a34a; --bad:#dc2626;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Helvetica,Arial,sans-serif; color:var(--ink); background:var(--bg)}
+    header{padding:24px}
+    .wrap{max-width:1100px; margin:0 auto}
+    .card{background:var(--card); border:1px solid var(--line); border-radius:14px; box-shadow:0 4px 14px rgba(0,0,0,.04)}
+    h1{font-size:22px; margin:0 0 6px}
+    p.sub{color:var(--muted); margin:0 0 18px}
+    .grid{display:grid; gap:12px}
+    .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    .grid.cols-2{grid-template-columns:repeat(2,1fr)}
+    .row{display:flex; gap:12px; align-items:stretch}
+    label{display:block; font-size:12px; color:var(--muted); margin-bottom:6px}
+    input, select, textarea{
+      width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px; background:#fff; color:var(--ink);
+      font:inherit; outline:none;
+    }
+    input:focus, textarea:focus{border-color:var(--brand); box-shadow:0 0 0 3px rgba(59,130,246,.12)}
+    .toolbar{display:flex; flex-wrap:wrap; gap:8px; padding:12px; border-top:1px solid var(--line); background:#fafafb; border-radius:0 0 14px 14px}
+    .btn{
+      padding:10px 12px; border-radius:10px; border:1px solid var(--line); background:#fff; cursor:pointer; font:inherit;
+    }
+    .btn.primary{background:var(--brand); color:#fff; border-color:var(--brand)}
+    .btn.success{background:var(--good); color:#fff; border-color:var(--good)}
+    .btn.ghost{background:transparent}
+    .btn.danger{background:var(--bad); color:#fff; border-color:var(--bad)}
+    .btn:disabled{opacity:.6; cursor:not-allowed}
+    /* tabela */
+    .tableWrap{overflow:auto; border-top:1px solid var(--line)}
+    table{width:100%; border-collapse:collapse; min-width:960px}
+    thead th{position:sticky; top:0; background:#fcfcff; z-index:1; border-bottom:1px solid var(--line); text-align:left; font-size:12px; color:var(--muted); padding:10px}
+    tbody td{border-bottom:1px solid var(--line); padding:8px}
+    tfoot td{border-top:2px solid var(--line); padding:10px; font-weight:600}
+    td input, td textarea, td select{width:100%}
+    td.num{text-align:right}
+    tr.invalid td{background:#fff5f5}
+    .mini{font-size:12px; color:var(--muted)}
+    .right{margin-left:auto}
+    .kpi{display:flex; gap:18px; padding:12px 16px; align-items:center}
+    .kpi .pill{padding:6px 10px; border-radius:999px; background:#eef2ff; font-weight:600}
+    .footerNote{color:var(--muted); font-size:12px; padding:10px 16px}
+    /* impressão */
+    @media print{
+      body{background:#fff}
+      .toolbar, .footerNote{display:none !important}
+      .card{border:none; box-shadow:none}
+      header{padding:0 0 8px}
+      .wrap{max-width:none}
+    }
+  </style>
+</head>
+<body>
+  <header class="wrap">
+    <h1>Relatório de Atividades</h1>
+    <p class="sub">Preencha o cabeçalho, adicione as atividades e gere o total de horas. Pronto para imprimir/baixar em PDF.</p>
+  </header>
+
+  <main class="wrap card">
+    <section style="padding:16px 16px 0">
+      <div class="grid cols-3">
+        <div>
+          <label>Empresa</label>
+          <input id="empresa" placeholder="Nome da empresa" />
+        </div>
+        <div>
+          <label>CNPJ</label>
+          <input id="cnpj" placeholder="00.000.000/0000-00" />
+        </div>
+        <div>
+          <label>Setor</label>
+          <input id="setor" placeholder="Setor/Departamento" />
+        </div>
+      </div>
+
+      <div class="grid cols-3" style="margin-top:12px">
+        <div>
+          <label>Colaborador</label>
+          <input id="colaborador" placeholder="Nome completo" />
+        </div>
+        <div>
+          <label>Cargo</label>
+          <input id="cargo" placeholder="Cargo/Função" />
+        </div>
+        <div>
+          <label>Matrícula</label>
+          <input id="matricula" placeholder="ID/Matrícula" />
+        </div>
+      </div>
+
+      <div class="grid cols-2" style="margin-top:12px">
+        <div>
+          <label>Período (mês/ano)</label>
+          <input id="periodo" type="month" />
+        </div>
+        <div>
+          <label>Supervisor(a)</label>
+          <input id="supervisor" placeholder="Responsável/Supervisor" />
+        </div>
+      </div>
+
+      <div class="kpi">
+        <span class="pill">Total: <span id="totalHoras">00:00</span></span>
+        <span class="mini">As horas são recalculadas automaticamente ao editar os horários.</span>
+        <span class="right mini" id="autosaveHint">Auto-save: ativo</span>
+      </div>
+    </section>
+
+    <div class="tableWrap">
+      <table id="tabela">
+        <thead>
+          <tr>
+            <th style="width:120px">Data</th>
+            <th>Atividade / Observações</th>
+            <th style="width:120px">Entrada</th>
+            <th style="width:120px">Saída</th>
+            <th style="width:120px">Intervalo (min)</th>
+            <th style="width:120px">Carga (hh:mm)</th>
+            <th style="width:50px">Sel.</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="5" class="num">Total do período</td>
+            <td class="num" id="tfootTotal">00:00</td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn primary" id="addLinha">+ Adicionar linha</button>
+      <button class="btn" id="dupLinha">Duplicar última</button>
+      <button class="btn danger" id="remSel">Remover selecionadas</button>
+      <button class="btn" id="limparTudo">Limpar tudo</button>
+      <span class="right"></span>
+      <button class="btn" id="exportJson">Exportar JSON</button>
+      <button class="btn" id="importJson">Importar JSON</button>
+      <button class="btn success" onclick="window.print()">Imprimir / Salvar PDF</button>
+    </div>
+
+    <div class="footerNote">Dica: hospede este arquivo como <strong>index.html</strong> no GitHub Pages para usar de qualquer lugar.</div>
+  </main>
+
+  <script>
+    // ===== Utilidades de tempo =====
+    function toMinutes(hhmm){
+      if(!hhmm || !/^\d{2}:\d{2}$/.test(hhmm)) return null;
+      const [h,m]=hhmm.split(':').map(Number);
+      if(h>23||m>59) return null;
+      return h*60+m;
+    }
+    function fromMinutes(min){
+      if(min==null) return "00:00";
+      const s = Math.max(0, Math.floor(min));
+      const h = Math.floor(s/60);
+      const m = s % 60;
+      return (h+"").padStart(2,"0")+":"+(""+m).padStart(2,"0");
+    }
+    function computeCarga(entrada, saida, intervaloMin){
+      const ei = toMinutes(entrada);
+      const so = toMinutes(saida);
+      const brk = Number.isFinite(intervaloMin) ? Math.max(0, intervaloMin) : 0;
+      if(ei==null || so==null) return {min:null, ok:false};
+      const dur = so - ei - brk;
+      return {min: dur, ok: dur>=0};
+    }
+
+    // ===== DOM helpers =====
+    const tbody = document.getElementById('tbody');
+    const totalHoras = document.getElementById('totalHoras');
+    const tfootTotal = document.getElementById('tfootTotal');
+
+    // Estado em memória
+    let linhas = [];
+
+    function linhaDOM(l){
+      const tr = document.createElement('tr');
+
+      const tdData = document.createElement('td');
+      const inpData = document.createElement('input');
+      inpData.type = 'date';
+      inpData.value = l.data || '';
+      inpData.addEventListener('input', ()=>{l.data=inpData.value; save();});
+      tdData.appendChild(inpData);
+
+      const tdDesc = document.createElement('td');
+      const txt = document.createElement('textarea');
+      txt.rows = 2; txt.placeholder = "Descreva a atividade, projeto, OS, etc.";
+      txt.value = l.desc || '';
+      txt.addEventListener('input', ()=>{l.desc=txt.value; save();});
+      tdDesc.appendChild(txt);
+
+      const tdEnt = document.createElement('td');
+      const ent = document.createElement('input');
+      ent.type='time'; ent.step=60; ent.value = l.entrada || '';
+      ent.addEventListener('input', ()=>{l.entrada=ent.value; recalcLinha(l,tr); save();});
+      tdEnt.appendChild(ent);
+
+      const tdSai = document.createElement('td');
+      const sai = document.createElement('input');
+      sai.type='time'; sai.step=60; sai.value = l.saida || '';
+      sai.addEventListener('input', ()=>{l.saida=sai.value; recalcLinha(l,tr); save();});
+      tdSai.appendChild(sai);
+
+      const tdBrk = document.createElement('td');
+      const brk = document.createElement('input');
+      brk.type='number'; brk.min=0; brk.step=5; brk.placeholder='0';
+      brk.value = Number.isFinite(l.intervalo)? l.intervalo : '';
+      brk.addEventListener('input', ()=>{
+        const v = brk.value===''? NaN : Number(brk.value);
+        l.intervalo = Number.isFinite(v)? v : undefined;
+        recalcLinha(l,tr); save();
+      });
+      tdBrk.appendChild(brk);
+
+      const tdCarga = document.createElement('td');
+      tdCarga.className='num';
+      tdCarga.textContent = l.carga || '00:00';
+
+      const tdSel = document.createElement('td');
+      tdSel.style.textAlign='center';
+      const chk = document.createElement('input');
+      chk.type='checkbox';
+      tdSel.appendChild(chk);
+
+      tr.append(tdData, tdDesc, tdEnt, tdSai, tdBrk, tdCarga, tdSel);
+      recalcLinha(l,tr);
+      return tr;
+    }
+
+    function recalcLinha(l,tr){
+      const cargaCell = tr.children[5];
+      const {min, ok} = computeCarga(l.entrada, l.saida, Number.isFinite(l.intervalo)? l.intervalo : 0);
+      if(min==null){ cargaCell.textContent='00:00'; tr.classList.remove('invalid'); l.carga='00:00'; recalcTotal(); return; }
+      if(!ok){ tr.classList.add('invalid'); } else { tr.classList.remove('invalid'); }
+      const hhmm = fromMinutes(min);
+      l.carga = hhmm;
+      cargaCell.textContent = hhmm;
+      recalcTotal();
+    }
+
+    function recalcTotal(){
+      const totalMin = linhas.reduce((a,l)=>{
+        const parts = /^\d{2}:\d{2}$/.test(l.carga||'') ? l.carga.split(':').map(Number) : [0,0];
+        return a + parts[0]*60 + parts[1];
+      },0);
+      const hhmm = fromMinutes(totalMin);
+      totalHoras.textContent = hhmm;
+      tfootTotal.textContent = hhmm;
+    }
+
+    function render(){
+      tbody.innerHTML='';
+      linhas.forEach(l => tbody.appendChild(linhaDOM(l)));
+      recalcTotal();
+    }
+
+    // ===== Persistência =====
+    const hdrIds = ['empresa','cnpj','setor','colaborador','cargo','matricula','periodo','supervisor'];
+    function save(){
+      const header = Object.fromEntries(hdrIds.map(id=>[id, document.getElementById(id).value]));
+      const data = {header, linhas};
+      localStorage.setItem('relatorioAtividades:v1', JSON.stringify(data));
+      document.getElementById('autosaveHint').textContent = 'Auto-save: salvo às ' + new Date().toLocaleTimeString('pt-BR');
+    }
+    function load(){
+      const raw = localStorage.getItem('relatorioAtividades:v1');
+      if(!raw){ linhas = []; return; }
+      try{
+        const parsed = JSON.parse(raw);
+        hdrIds.forEach(id=>{ if(parsed.header && parsed.header[id]!=null) document.getElementById(id).value = parsed.header[id]; });
+        linhas = (parsed.linhas || []).map(l=>({
+          data:l.data||'',
+          desc:l.desc||'',
+          entrada:l.entrada||'',
+          saída:l.saída||l.saida||'',
+          get saida(){ return this.saída }, set saida(v){ this.saída=v }, // compat
+          intervalo:Number.isFinite(l.intervalo)? l.intervalo : undefined,
+          carga:l.carga||'00:00'
+        }));
+      }catch(e){ linhas=[]; }
+    }
+
+    // ===== Ações =====
+    document.getElementById('addLinha').addEventListener('click', ()=>{
+      linhas.push({data:'', desc:'', entrada:'', saida:'', intervalo:0, carga:'00:00'});
+      render(); save();
+    });
+
+    document.getElementById('dupLinha').addEventListener('click', ()=>{
+      if(linhas.length===0) return;
+      const last = linhas[linhas.length-1];
+      linhas.push({...last}); render(); save();
+    });
+
+    document.getElementById('remSel').addEventListener('click', ()=>{
+      const rows = Array.from(tbody.querySelectorAll('tr'));
+      const toKeep = [];
+      rows.forEach((tr, idx)=>{
+        const checked = tr.querySelector('input[type="checkbox"]').checked;
+        if(!checked) toKeep.push(linhas[idx]);
+      });
+      linhas = toKeep; render(); save();
+    });
+
+    document.getElementById('limparTudo').addEventListener('click', ()=>{
+      if(!confirm('Limpar todos os dados?')) return;
+      hdrIds.forEach(id=>document.getElementById(id).value='');
+      linhas = [];
+      render(); save();
+    });
+
+    hdrIds.forEach(id=>{
+      document.getElementById(id).addEventListener('input', save);
+    });
+
+    document.getElementById('exportJson').addEventListener('click', ()=>{
+      const header = Object.fromEntries(hdrIds.map(id=>[id, document.getElementById(id).value]));
+      const payload = {exportedAt:new Date().toISOString(), header, linhas};
+      const blob = new Blob([JSON.stringify(payload,null,2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = Object.assign(document.createElement('a'), {href:url, download:'relatorio_atividades.json'});
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    });
+
+    document.getElementById('importJson').addEventListener('click', ()=>{
+      const inp = document.createElement('input'); inp.type='file'; inp.accept='.json,application/json';
+      inp.onchange = () => {
+        const file = inp.files?.[0]; if(!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          try{
+            const data = JSON.parse(reader.result);
+            hdrIds.forEach(id=>{ if(data.header && data.header[id]!=null) document.getElementById(id).value = data.header[id]; });
+            linhas = (data.linhas || []);
+            render(); save();
+          }catch(e){ alert('Arquivo inválido.'); }
+        };
+        reader.readAsText(file);
+      };
+      inp.click();
+    });
+
+    // Inicialização
+    load(); render();
+    if(linhas.length===0){ // começa com 3 linhas para agilizar
+      linhas = [{},{},{}].map(()=>({data:'', desc:'', entrada:'', saida:'', intervalo:0, carga:'00:00'}));
+      render(); save();
+    }
+  </script>
+</body>
+</html>
