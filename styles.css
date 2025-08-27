@@ -7,7 +7,7 @@
 *{box-sizing:border-box; font-family:"Times New Roman", Times, serif}
 
 body{margin:0; color:var(--ink); background:var(--bg)}
-.wrap{width:100%; margin:0 auto}
+.wrap{width:80%; margin:0 auto}
 .card{background:var(--card); border:1px solid var(--line); border-radius:14px; box-shadow:0 4px 14px rgba(0,0,0,.04)}
 .titleBlock{padding:6px 16px 12px; text-align:center; border:1px solid var(--line); border-radius:14px; background:#fff; margin-top:8px}
 .titleBlock .titleLine{font-weight:700; font-size:14px}
@@ -20,6 +20,4 @@ input, textarea, select{
 input:focus, textarea:focus, select:focus{border-color:var(--brand); box-shadow:0 0 0 3px rgba(15,118,110,.12)}
 .grid{display:grid; gap:12px}
 .grid.cols-2{grid-template-columns:repeat(2,1fr)}
-.row{display:flex; gap:12px; align-items:center; flex-wrap:wrap}
-.chk{display:flex; gap:6px; align-items:center; margin-right:12px}
-.toolbar{display:flex; gap:16px; justify-content
+.row{display:flex; gap:12px; align-items:center; flex
