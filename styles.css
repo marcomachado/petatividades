@@ -12,14 +12,15 @@ body{margin:0; color:var(--ink); background:var(--bg)}
 .titleBlock{padding:6px 16px 12px; text-align:center; border:1px solid var(--line); border-radius:14px; background:#fff; margin-top:8px}
 .titleBlock .titleLine{font-weight:700; font-size:14px}
 .mini{font-size:12px; color:var(--muted)}
-label{display:block; font-size:12px; color:var(--muted); margin-bottom:6px}
+label{display:block; font-size:12px; color:var(--muted); margin-bottom:6px; padding-left:8px;}
 input, textarea, select{
   width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px; background:#fff; color:var(--ink);
-  outline:none;
+  outline:none; margin-left:4px; /* Adiciona margem entre label e borda */
 }
 input:focus, textarea:focus, select:focus{border-color:var(--brand); box-shadow:0 0 0 3px rgba(15,118,110,.12)}
 .grid{display:grid; gap:12px}
 .grid.cols-2{grid-template-columns:repeat(2,1fr)}
+.grid.cols-3{grid-template-columns:repeat(3,1fr)}
 .row{display:flex; gap:12px; align-items:center; flex-wrap:wrap}
 .chk{display:flex; gap:6px; align-items:center; margin-right:12px}
 .toolbar{display:flex; gap:16px; justify-content:space-between; align-items:center; padding:12px; border-top:1px solid var(--line); background:#fafafb; border-radius:0 0 14px 14px}
@@ -28,6 +29,12 @@ input:focus, textarea:focus, select:focus{border-color:var(--brand); box-shadow:
 .btn.primary{background:var(--brand); color:#fff; border-color:var(--brand)}
 .btn.success{background:var(--good); color:#fff; border-color:var(--good)}
 .btn.danger{background:var(--bad); color:#fff; border-color:var(--bad)}
+
+/* Ajuste das larguras das colunas na tabela */
+.col-sel{width:1.5cm; text-align:center}
+.col-date{width:2.8cm}
+.col-time{width:2.4cm}
+.col-carga{width:3.2cm}
 
 /* Cabeçalho com imagem fixa */
 .headerCard{background:#fff; border:1px solid var(--line); border-radius:14px; margin:12px auto 8px}
@@ -45,12 +52,6 @@ tfoot td{border-top:2px solid var(--line); padding:10px; font-weight:600}
 td input, td textarea{width:100%}
 td.num{text-align:right}
 tr.invalid td{background:#fff5f5}
-
-/* Larguras fixas em cm para colunas */
-.col-sel{width:1cm; text-align:center}
-.col-date{width:2.6cm}
-.col-time{width:2.2cm}
-.col-carga{width:2.6cm}
 
 /* Assinaturas lado a lado */
 .sig-area{padding:24px 0; display:flex; gap:40px; justify-content:space-between; align-items:flex-end}
