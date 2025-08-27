@@ -8,7 +8,7 @@
 </head>
 <body>
   <div class="wrap">
-    <!-- Cabeçalho com a imagem enviada -->
+    <!-- Cabeçalho com a imagem -->
     <div class="headerCard">
       <img class="headerImg" src="./cabecalho-pet-saude.png" alt="Cabeçalho PET Saúde">
     </div>
@@ -20,7 +20,7 @@
     </div>
 
     <main class="card" style="margin-top:12px">
-      <!-- Cabeçalho obrigatório -->
+      <!-- Cabeçalho -->
       <section class="content-narrow" style="padding:16px 0 0">
         <div class="grid cols-2">
           <div>
@@ -35,28 +35,40 @@
 
         <div class="grid cols-2" style="margin-top:12px">
           <div>
-            <label>Cenário *</label>
-            <input id="cenario" required />
+            <label>Eixo Temático *</label>
+            <select id="eixo" required>
+              <option value="" selected disabled>Selecione...</option>
+              <option value="I">I</option>
+              <option value="II">II</option>
+              <option value="III">III</option>
+              <option value="IV">IV</option>
+            </select>
           </div>
+          <div>
+            <label>Atividade do GT *</label>
+            <select id="atividadeGT" required>
+              <option value="" selected disabled>Selecione...</option>
+              <option value="GT1">GT 1: Trabalho</option>
+              <option value="GT2">GT 2: Formação</option>
+              <option value="GT3">GT 3: Pesquisa</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid cols-2" style="margin-top:12px">
           <div>
             <label>Período (mês/ano) *</label>
             <input id="periodo" type="month" required />
           </div>
+          <div></div>
         </div>
 
-        <div class="row" style="margin-top:12px">
-          <span class="mini" style="min-width:140px">Eixo Temático *</span>
-          <label class="chk"><input type="radio" name="eixo" id="eixoI"> I</label>
-          <label class="chk"><input type="radio" name="eixo" id="eixoII"> II</label>
-          <label class="chk"><input type="radio" name="eixo" id="eixoIII"> III</label>
-          <label class="chk"><input type="radio" name="eixo" id="eixoIV"> IV</label>
-        </div>
-
-        <div class="row" style="margin-top:8px">
-          <span class="mini" style="min-width:140px">Atividade do GT *</span>
-          <label class="chk"><input type="radio" name="atividadeGT" id="gt1"> GT 1: Trabalho</label>
-          <label class="chk"><input type="radio" name="atividadeGT" id="gt2"> GT 2: Formação</label>
-          <label class="chk"><input type="radio" name="atividadeGT" id="gt3"> GT 3: Pesquisa</label>
+        <!-- Cenário sozinho na última linha -->
+        <div class="grid" style="margin-top:12px">
+          <div>
+            <label>Cenário *</label>
+            <input id="cenario" required />
+          </div>
         </div>
       </section>
 
@@ -86,19 +98,25 @@
           </table>
         </div>
 
-        <!-- Ações (fora da impressão) -->
-        <div class="toolbar">
-          <button class="btn primary" id="addLinha">+ Adicionar linha</button>
-          <button class="btn" id="dupLinha">Duplicar última</button>
-          <button class="btn danger" id="remSel">Remover selecionadas</button>
-          <button class="btn" id="limparTudo">Limpar tudo</button>
-          <span style="margin-left:auto"></span>
-          <button class="btn" id="exportJson">Exportar JSON</button>
-          <button class="btn" id="importJson">Importar JSON</button>
-          <button class="btn success" onclick="window.print()">Imprimir / Salvar PDF</button>
+        <!-- Botões em linha única -->
+        <div class="toolbar toolbar-inline">
+          <div class="left-buttons">
+            <button class="btn primary" id="addLinha">+ Adicionar linha</button>
+            <button class="btn" id="dupLinha">Duplicar</button>
+            <button class="btn danger" id="remSel">Remover</button>
+            <button class="btn" id="limparTudo">Limpar</button>
+          </div>
+          <div class="middle-buttons">
+            <button class="btn" id="btnImprimir">Imprimir</button>
+            <button class="btn success" id="btnBaixarPDF">Baixar PDF (paisagem)</button>
+          </div>
+          <div class="right-buttons">
+            <button class="btn" id="exportJson">Exportar JSON</button>
+            <button class="btn" id="importJson">Importar JSON</button>
+          </div>
         </div>
 
-        <!-- Assinaturas lado a lado, alinhadas com a tabela -->
+        <!-- Assinaturas -->
         <div class="sig-area">
           <div class="sig-box">Assinatura do Bolsista</div>
           <div class="sig-box">Assinatura do Tutor/ Coordenador do Grupo Tutorial</div>
@@ -127,14 +145,16 @@
       const so = toMinutes(saida);
       if(ei==null || so==null) return {min:null, ok:false};
       const dur = so - ei;
-      return {min: dur, ok: dur>0}; // exige entrada < saída
+      return {min: dur, ok: dur>0};
     }
 
     // ===== Estado / DOM =====
     const tbody = document.getElementById('tbody');
     const tfootTotal = document.getElementById('tfootTotal');
-    const HDR_KEYS = ['colaborador','vinculo','cenario','periodo'];
-    const RADIO_GROUPS = { eixo:['eixoI','eixoII','eixoIII','eixoIV'], atividadeGT:['gt1','gt2','gt3'] };
+
+    const HDR_KEYS = ['colaborador','vinculo','periodo','cenario'];
+    const SELECT_KEYS = ['eixo','atividadeGT'];
+
     let linhas = [];
 
     function linhaDOM(l){
@@ -145,7 +165,7 @@
       const chk = document.createElement('input'); chk.type='checkbox';
       tdSel.appendChild(chk);
 
-      // Data (date picker)
+      // Data (picker) — no pt-BR, o navegador exibe dd/MM/yyyy
       const tdData = document.createElement('td');
       const inpData = document.createElement('input');
       inpData.type = 'date';
@@ -185,7 +205,7 @@
     }
 
     function recalcLinha(l,tr){
-      const cargaCell = tr.children[5]; // "Carga Horária"
+      const cargaCell = tr.children[5];
       const {min, ok} = computeCarga(l.entrada, l.saida);
       if(min==null){ cargaCell.textContent='00:00'; l.carga='00:00'; tr.classList.remove('invalid'); recalcTotal(); return; }
       if(!ok){ tr.classList.add('invalid'); l.carga='00:00'; cargaCell.textContent='00:00'; recalcTotal(); return; }
@@ -216,10 +236,10 @@
         const el = document.getElementById(id);
         return [id, el?.value || ""];
       }));
-      for(const [group, ids] of Object.entries(RADIO_GROUPS)){
-        const checkedId = ids.find(id => document.getElementById(id)?.checked);
-        header[group] = checkedId || null;
-      }
+      SELECT_KEYS.forEach(id=>{
+        const el = document.getElementById(id);
+        header[id] = el?.value || "";
+      });
       return header;
     }
     function setHeader(header){
@@ -228,19 +248,18 @@
         const el = document.getElementById(id);
         if(el && header[id]!=null) el.value = header[id];
       });
-      for(const [group, ids] of Object.entries(RADIO_GROUPS)){
-        ids.forEach(id=>{
-          const el = document.getElementById(id);
-          if(el) el.checked = (header[group]===id);
-        });
-      }
+      SELECT_KEYS.forEach(id=>{
+        const el = document.getElementById(id);
+        if(el && header[id]!=null) el.value = header[id];
+      });
     }
     function save(){
       const data = {header:getHeader(), linhas};
-      localStorage.setItem('petSaudeRelatorio:v4', JSON.stringify(data));
+      localStorage.setItem('petSaudeRelatorio:v5', JSON.stringify(data));
     }
     function load(){
-      const raw = localStorage.getItem('petSaudeRelatorio:v4')
+      const raw = localStorage.getItem('petSaudeRelatorio:v5')
+        || localStorage.getItem('petSaudeRelatorio:v4')
         || localStorage.getItem('petSaudeRelatorio:v3')
         || localStorage.getItem('petSaudeRelatorio:v2')
         || localStorage.getItem('petSaudeRelatorio:v1');
@@ -279,20 +298,16 @@
     });
     document.getElementById('limparTudo').addEventListener('click', ()=>{
       if(!confirm('Limpar todos os dados?')) return;
-      ['colaborador','vinculo','cenario','periodo'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
-      Object.values(RADIO_GROUPS).flat().forEach(id=>{ const el=document.getElementById(id); if(el) el.checked=false; });
+      ['colaborador','vinculo','periodo','cenario'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+      ['eixo','atividadeGT'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
       linhas = [];
       render(); save();
     });
 
     // salvar cabeçalho ao alterar
-    ['colaborador','vinculo','cenario','periodo'].forEach(id=>{
+    [...HDR_KEYS, ...SELECT_KEYS].forEach(id=>{
       const el = document.getElementById(id);
       el?.addEventListener('input', save);
-      el?.addEventListener('change', save);
-    });
-    Object.values(RADIO_GROUPS).flat().forEach(id=>{
-      const el = document.getElementById(id);
       el?.addEventListener('change', save);
     });
 
@@ -322,23 +337,32 @@
       inp.click();
     });
 
-    // Validação do cabeçalho antes de imprimir
+    // ===== Impressão / PDF =====
     function validarCabecalho(){
-      const req = ['colaborador','vinculo','cenario','periodo'];
+      const req = ['colaborador','vinculo','periodo','cenario'];
       let ok = true;
       for(const id of req){
         const el = document.getElementById(id);
         if(!el.value){ ok=false; el.style.borderColor='red'; } else el.style.borderColor='';
       }
-      if(!document.querySelector('input[name="eixo"]:checked')) ok=false;
-      if(!document.querySelector('input[name="atividadeGT"]:checked')) ok=false;
+      if(!document.getElementById('eixo').value) ok=false;
+      if(!document.getElementById('atividadeGT').value) ok=false;
       if(!ok) alert("Preencha todos os campos obrigatórios do cabeçalho!");
       return ok;
     }
-    const oldPrint = window.print;
-    window.print = function(){
-      if(validarCabecalho()) oldPrint();
-    };
+
+    document.getElementById('btnImprimir').addEventListener('click', ()=>{
+      if(validarCabecalho()) window.print();
+    });
+
+    document.getElementById('btnBaixarPDF').addEventListener('click', ()=>{
+      if(!validarCabecalho()) return;
+      // Força modo paisagem apenas durante esta impressão
+      document.documentElement.classList.add('for-pdf-landscape');
+      window.print();
+      // Remove a classe após a tentativa de impressão
+      setTimeout(()=>document.documentElement.classList.remove('for-pdf-landscape'), 1000);
+    });
 
     // Inicialização
     load(); render();
