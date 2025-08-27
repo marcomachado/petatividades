@@ -7,7 +7,7 @@
 *{box-sizing:border-box; font-family:"Times New Roman", Times, serif}
 
 body{margin:0; color:var(--ink); background:var(--bg)}
-.wrap{max-width:1100px; margin:0 auto}
+.wrap{width:100%; margin:0 auto}
 .card{background:var(--card); border:1px solid var(--line); border-radius:14px; box-shadow:0 4px 14px rgba(0,0,0,.04)}
 .titleBlock{padding:6px 16px 12px; text-align:center; border:1px solid var(--line); border-radius:14px; background:#fff; margin-top:8px}
 .titleBlock .titleLine{font-weight:700; font-size:14px}
@@ -22,51 +22,4 @@ input:focus, textarea:focus, select:focus{border-color:var(--brand); box-shadow:
 .grid.cols-2{grid-template-columns:repeat(2,1fr)}
 .row{display:flex; gap:12px; align-items:center; flex-wrap:wrap}
 .chk{display:flex; gap:6px; align-items:center; margin-right:12px}
-.toolbar{display:flex; gap:16px; justify-content:space-between; align-items:center; padding:12px; border-top:1px solid var(--line); background:#fafafb; border-radius:0 0 14px 14px}
-.toolbar .left-buttons, .toolbar .middle-buttons, .toolbar .right-buttons{display:flex; gap:8px; flex-wrap:wrap}
-.btn{padding:10px 12px; border-radius:10px; border:1px solid var(--line); background:#fff; cursor:pointer}
-.btn.primary{background:var(--brand); color:#fff; border-color:var(--brand)}
-.btn.success{background:var(--good); color:#fff; border-color:var(--good)}
-.btn.danger{background:var(--bad); color:#fff; border-color:var(--bad)}
-
-/* Cabeçalho com imagem fixa */
-.headerCard{background:#fff; border:1px solid var(--line); border-radius:14px; margin:12px auto 8px}
-.headerImg{display:block; width:100%; height:auto; object-fit:contain; max-height:110px; padding:8px 10px}
-
-/* Área de conteúdo mais estreita (~80%) */
-.content-narrow{max-width:80%; margin:0 auto}
-
-/* Tabela (dentro da área estreita) */
-.tableWrap{overflow:auto; border-top:1px solid var(--line)}
-table{width:100%; border-collapse:collapse}
-thead th{position:sticky; top:0; background:#fcfcff; z-index:1; border-bottom:1px solid var(--line); text-align:left; font-size:12px; color:var(--muted); padding:10px}
-tbody td{border-bottom:1px solid var(--line); padding:8px}
-tfoot td{border-top:2px solid var(--line); padding:10px; font-weight:600}
-td input, td textarea{width:100%}
-td.num{text-align:right}
-tr.invalid td{background:#fff5f5}
-
-/* Larguras fixas em cm para colunas */
-.col-sel{width:1cm; text-align:center}
-.col-date{width:2.6cm}
-.col-time{width:2.2cm}
-.col-carga{width:2.6cm}
-
-/* Assinaturas lado a lado */
-.sig-area{padding:24px 0; display:flex; gap:40px; justify-content:space-between; align-items:flex-end}
-.sig-box{flex:1 1 48%; text-align:center; border-top:1px solid #000; padding-top:8px; font-size:12px; page-break-inside:avoid}
-
-/* Impressão – margens 10mm */
-@page{ size:A4; margin:10mm 10mm 10mm 10mm; }
-
-/* Forçar paisagem apenas quando a classe é aplicada (Baixar PDF) */
-html.for-pdf-landscape @page{ size:A4 landscape; margin:10mm }
-
-/* Ocultar elementos não essenciais na impressão */
-@media print{
-  body{background:#fff}
-  .toolbar{display:none !important}
-  .card{border:none; box-shadow:none}
-  .wrap{max-width:none}
-  a[href]:after{content:""}
-}
+.toolbar{display:flex; gap:16px; justify-content
